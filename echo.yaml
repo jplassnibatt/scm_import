@@ -12,7 +12,7 @@
     month: '*'
     time:
       hour: '*'
-      minute: 0/6
+      minute: 0/10
       seconds: '0'
     weekday:
       day: '*'
