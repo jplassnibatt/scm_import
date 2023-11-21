@@ -1,0 +1,28 @@
+- defaultTab: nodes
+  description: ''
+  executionEnabled: true
+  group: schedule
+  id: 0763b069-2776-4b24-bbae-d381f62a3de4
+  loglevel: INFO
+  name: echo
+  nodeFilterEditable: false
+  plugins:
+    ExecutionLifecycle: {}
+  schedule:
+    month: '*'
+    time:
+      hour: '*'
+      minute: 0/3
+      seconds: '0'
+    weekday:
+      day: '*'
+    year: '*'
+  scheduleEnabled: true
+  schedules: []
+  sequence:
+    commands:
+    - exec: echo hi
+    keepgoing: true
+    strategy: node-first
+  tags: schedule
+  uuid: a1a4465f-8a15-40cf-8060-82ac502c22a7
