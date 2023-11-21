@@ -4,7 +4,7 @@
   group: schedule
   id: 0763b069-2776-4b24-bbae-d381f62a3de4
   loglevel: INFO
-  name: echo
+  name: echonew
   nodeFilterEditable: false
   plugins:
     ExecutionLifecycle: {}
@@ -12,7 +12,7 @@
     month: '*'
     time:
       hour: '*'
-      minute: 0/3
+      minute: 0/5
       seconds: '0'
     weekday:
       day: '*'
