@@ -1,0 +1,94 @@
+- defaultTab: nodes
+  description: Recent and Older than information in https://docs.rundeck.com/docs/api/#execution-query
+  executionEnabled: true
+  group: local
+  id: 5ff1cacd-b493-433c-96dc-e7ec8d6cee7b
+  loglevel: INFO
+  name: Execution Report
+  nodeFilterEditable: false
+  options:
+  - hidden: true
+    name: apikey
+    required: true
+    secure: true
+    storagePath: keys/jp/rd-token
+    valueExposed: true
+  - label: 'Older than: '
+    name: older
+  - label: 'Recent than: '
+    name: recent
+  - label: 'Term to search: '
+    name: term
+    required: true
+  - label: 'User: '
+    name: user
+    required: true
+  plugins:
+    ExecutionLifecycle: {}
+  runnerSelector:
+    runnerFilterMode: LOCAL
+    runnerFilterType: LOCAL_RUNNER
+  scheduleEnabled: true
+  schedules: []
+  sequence:
+    commands:
+    - plugins:
+        LogFilter:
+        - config:
+            datatype: text/html
+            sanitizeHtml: 'true'
+            striped: 'false'
+          type: render-datatype
+      script: |-
+        #Replace spaces in username to work on urls
+        user_name="@option.user@"
+        user_name=$(echo "$user_name" | sed -E 's/ +/%20/g')
+
+        # Extract all job ids from the JSON
+        url="https://cse.myrundeck.com"
+        api=44
+        project="jp-demos"
+
+        job_ids=`curl -s --request GET \
+          --url ''$url'/api/'$api'/project/'$project'/executions?userFilter='$user_name'&recentFilter=@option.recent@&olderFilter=@option.older@' \
+          --header 'Accept: application/json' \
+          --header 'X-Rundeck-Auth-Token: @option.apikey@' | jq -r '.executions[] | {job_id: .job.id, job_name: .job.name, exec_link: .permalink, date: .["date-started"].date, job_link: .job.permalink}'`
+
+        # Iterate over each block and extract job_id, job_name, exec_link, date and job_link
+        echo "$job_ids" | jq -c '.' | while read -r json_block; do
+          job_id=$(echo "$json_block" | jq -r '.job_id')
+          job_name=$(echo "$json_block" | jq -r '.job_name')
+          exec_link=$(echo "$json_block" | jq -r '.exec_link')
+          date=$(echo "$json_block" | jq -r '.date')
+          job_link=$(echo "$json_block" | jq -r '.job_link')
+
+        #search for term in jobs listed
+          for jobid in $job_id; do
+              grep_output=`curl -s --request GET \
+            --url ''$url'/api/'$api'/job/'$jobid'/workflow' \
+            --header 'Accept: application/json' \
+            --header 'Content-Type: application/json' \
+            --header 'X-Rundeck-Auth-Token: @option.apikey@' | jq . |grep "@option.term@"`
+            # grep variable output
+            if [[ -n $grep_output ]]; then
+              # Perform actions with job_name, exec_link, date and job_link
+              echo "Job name: $job_name"
+              echo "Execution link: <a href='$exec_link'>Execution link</a>"
+              echo "Execution date: $date"
+              echo "Job link: <a href='$job_link'>Job link</a>"
+
+              echo "-----------------"
+        #testing
+            #  else
+            #  echo "No jobs for the filters selected."
+        #      if [[ "$printed_empty" == false ]]; then
+        #         echo "No jobs for the filters selected."
+        #         printed_empty=true
+        #     fi
+        #end testing
+            fi
+          done
+        done
+    keepgoing: false
+    strategy: node-first
+  uuid: 5ff1cacd-b493-433c-96dc-e7ec8d6cee7b
