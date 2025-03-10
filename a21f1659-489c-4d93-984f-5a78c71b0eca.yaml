@@ -1,0 +1,31 @@
+- defaultTab: nodes
+  description: ''
+  executionEnabled: true
+  id: a21f1659-489c-4d93-984f-5a78c71b0eca
+  loglevel: INFO
+  name: test_20250310
+  nodeFilterEditable: false
+  nodefilters:
+    dispatch:
+      excludePrecedence: true
+      keepgoing: false
+      rankOrder: ascending
+      successOnEmptyNodeFilter: false
+      threadcount: '1'
+    filter: 'name: cse-jp-node-3 '
+  nodesSelectedByDefault: true
+  plugins:
+    ExecutionLifecycle: {}
+  runnerSelector:
+    runnerFilterMode: LOCAL
+    runnerFilterType: LOCAL_RUNNER
+  scheduleEnabled: true
+  schedules: []
+  sequence:
+    commands:
+    - exec: whoami
+    - exec: whoami
+    keepgoing: false
+    strategy: node-first
+  uuid: a21f1659-489c-4d93-984f-5a78c71b0eca
+
