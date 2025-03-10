@@ -3,7 +3,7 @@
   executionEnabled: true
   id: a21f1659-489c-4d93-984f-5a78c71b0eca
   loglevel: INFO
-  name: test_20250310_1
+  name: test_20250310
   nodeFilterEditable: false
   nodefilters:
     dispatch:
