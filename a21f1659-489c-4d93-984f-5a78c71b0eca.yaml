@@ -12,7 +12,7 @@
       rankOrder: ascending
       successOnEmptyNodeFilter: false
       threadcount: '1'
-    filter: 'name: new_node1'
+    filter: 'name: new_node'
   nodesSelectedByDefault: true
   plugins:
     ExecutionLifecycle: {}
